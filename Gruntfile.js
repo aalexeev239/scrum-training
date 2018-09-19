@@ -103,16 +103,30 @@ module.exports = function(grunt) {
 			}
 		},
 
+        copy: {
+		    main: {
+                files: [
+                    {
+                        expand: true,
+                        src: [
+                            'index.html',
+                            'css/**',
+                            'js/**',
+                            'lib/**',
+                            'images/**',
+                            'plugin/**',
+                            '**.md'
+                        ],
+                        dest: 'build/'
+                    }
+                ]
+            }
+        },
+
 		zip: {
 			bundle: {
 				src: [
-					'index.html',
-					'css/**',
-					'js/**',
-					'lib/**',
-					'images/**',
-					'plugin/**',
-					'**.md'
+					'build/**'
 				],
 				dest: 'reveal-js-presentation.zip'
 			}
@@ -156,6 +170,7 @@ module.exports = function(grunt) {
 
 	// Dependencies
 	grunt.loadNpmTasks( 'grunt-contrib-connect' );
+    grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 	grunt.loadNpmTasks( 'grunt-contrib-qunit' );
@@ -181,8 +196,10 @@ module.exports = function(grunt) {
 	// All CSS
 	grunt.registerTask( 'css', [ 'sass', 'autoprefixer', 'cssmin' ] );
 
+    grunt.registerTask( 'build', [ 'default', 'copy' ] );
+
 	// Package presentation to archive
-	grunt.registerTask( 'package', [ 'default', 'zip' ] );
+	grunt.registerTask( 'package', [ 'build', 'zip' ] );
 
 	// Serve presentation locally
 	grunt.registerTask( 'serve', [ 'connect', 'watch' ] );
